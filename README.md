@@ -2,7 +2,7 @@
 0x00. AirBnB clone - The console
 
 
-<img src="https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png">
+<img src="https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png"/>
 
 
 Collaborators <br>
