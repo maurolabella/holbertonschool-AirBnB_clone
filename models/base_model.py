@@ -25,7 +25,7 @@ class BaseModel:
             self.created_at = datetime.utcnow()
             self.updated_at = datetime.utcnow()
 
-    def __mount_attrib(**attrib_d):
+    def __mount_attrib(self, **attrib_d):
         """
         private__sets attr
         """
@@ -49,7 +49,8 @@ class BaseModel:
         function defining the string type representation of an
         instance
         """
-        return '[{}] ({}) {}'.format(type(self).__name__, self.id, self.__dict__)
+        return '[{}] ({}) {}'.format(type(self).__name__,
+                                     self.id, self.__dict__)
 
     def save(self):
         """
@@ -67,7 +68,7 @@ class BaseModel:
                 return True
             else:
                 return False
-        except:
+        except Error:
             return False
 
     def to_dict(self):
