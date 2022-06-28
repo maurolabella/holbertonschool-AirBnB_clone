@@ -10,9 +10,7 @@ from datetime import datetime
 
 
 class BaseModel:
-    """
-    defines the abstract class BaseModel
-    """
+    """defines the abstract class BaseModel"""
 
     def __init__(self, **kwargs):
         """
@@ -68,7 +66,7 @@ class BaseModel:
                 return True
             else:
                 return False
-        except Error:
+        except Exception:
             return False
 
     def to_dict(self):
