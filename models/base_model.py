@@ -12,7 +12,7 @@ from datetime import datetime
 class BaseModel:
     """defines the abstract class BaseModel"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         __init__ for BaseModel Class
         """
@@ -23,7 +23,7 @@ class BaseModel:
             self.created_at = datetime.utcnow()
             self.updated_at = datetime.utcnow()
 
-    def __mount_attrib(self, **attrib_d):
+    def __mount_attrib(self, attrib_d):
         """
         private__sets attr
         """
@@ -39,6 +39,7 @@ class BaseModel:
         elif not isinstance(attrib_d['updated_at'], datetime):
             attrib_d['updated_at'] = datetime.strptime(
                 attrib_d['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
+        attrib_d.pop('__class__', None)
         for attr, val in attrib_d.items():
             setattr(self, attr, val)
 

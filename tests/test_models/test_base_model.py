@@ -79,12 +79,18 @@ class TestBaseModel_Instantiation(unittest.TestCase):
 
     def test_id_evolution(self):
         """checks for a reasonable id evolution"""
-        test = BaseModel()
-        # print(test)
-        # print(self.model)
-        # print(test.id.split("-")[0])
-        # print(self.model.id.split("-")[0])
+        test_a = BaseModel()
+        test_b = BaseModel()
+        # print(test_a)
+        # print(test_b)
+        # print(test_a.id.split("-")[0])
+        # print(test_b.id.split("-")[0])
         # map = zip(test.id.split("-"), self.model.id.split("-"))
         # for (id_t, id_m) in map.item():
         #     print(id_t, id_m)
-        self.assertTrue(test.id != self.model.id)
+        self.assertTrue(test_a.id != test_b.id)
+
+
+if __name__ == '__main__':
+    """TEST BaseModel"""
+    unittest.main
