@@ -3,16 +3,16 @@
 reading, and storing"""
 
 import json
-from models import base_model
+from models.base_model import BaseModel
 from datetime import datetime
 
-to_dict = base_model.BaseModel.to_dict
+# to_dict = base_model.BaseModel.to_dict
 
 
 class FileStorage():
     """serializes instances to a JSON file
     and deserializes JSON files to instances"""
-    __file_path = 'storage.json'
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):

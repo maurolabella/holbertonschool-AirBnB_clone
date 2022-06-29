@@ -3,6 +3,7 @@
 BaseModel Class (Models' module)
 """
 from rich import inspect
+import models
 import subprocess
 import json
 from uuid import uuid4, UUID
@@ -22,6 +23,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.utcnow()
             self.updated_at = datetime.utcnow()
+            models.storage.new(self)
 
     def __mount_attrib(self, attrib_d):
         """
@@ -56,6 +58,8 @@ class BaseModel:
         updates and save instance
         """
         self.updated_at = datetime.utcnow()
+        """calling save method of storage"""
+        models.storage.save()
 
     def __check_to_serial(self, obj_rec):
         """
