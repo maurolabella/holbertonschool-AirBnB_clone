@@ -9,6 +9,7 @@ import inspect
 import pycodestyle
 import os
 from datetime import datetime
+from time import sleep
 
 
 class TestDocs_BaseModel(unittest.TestCase):
@@ -81,16 +82,124 @@ class TestBaseModel_Instantiation(unittest.TestCase):
         """checks for a reasonable id evolution"""
         test_a = BaseModel()
         test_b = BaseModel()
-        # print(test_a)
-        # print(test_b)
-        # print(test_a.id.split("-")[0])
-        # print(test_b.id.split("-")[0])
-        # map = zip(test.id.split("-"), self.model.id.split("-"))
-        # for (id_t, id_m) in map.item():
-        #     print(id_t, id_m)
         self.assertTrue(test_a.id != test_b.id)
+
+class Test_BaseModel_init(unittest.TestCase):
+    """ Test BaseModel Init """
+
+    def test_BaseModel_init(self):
+        """ Test BaseModel """
+        self.assertTrue(hasattr(BaseModel(), "id"))
+        self.assertTrue(hasattr(BaseModel(), "created_at"))
+        self.assertTrue(hasattr(BaseModel(), "updated_at"))
+
+    def test_BaseModel_init_noargs(self):
+        """ Test BaseModel with no args """
+        self.assertEqual(BaseModel, type(BaseModel()))
+
+    def test_BaseModel_created_at_1(self):
+        """ Test created_at_1 """
+        self.assertTrue(isinstance(BaseModel().created_at, datetime))
+
+    def test_BaseModel_created_date_2(self):
+        """ Test created_at_2 """
+        self.assertEqual(type(BaseModel().created_at), datetime)
+
+    def test_BaseModel_updated_at_1(self):
+        """ test updated_at_1 """
+        self.assertTrue(isinstance(BaseModel().updated_at, datetime))
+
+    def test_BaseModel_updated_at_2(self):
+        """ test updated_at_2 """
+        self.assertEqual(type(BaseModel().updated_at), datetime)
+
+    def test_BaseModel_create_sleep(self):
+        """ create two objects at different time """
+        baseModel1 = BaseModel()
+        sleep(1)
+        baseModel2 = BaseModel()
+        self.assertNotEqual(baseModel1.created_at, baseModel2.created_at)
+
+
+class Test_BaseModel_save(unittest.TestCase):
+    """ Test BaseModel Save """
+
+    def test_BaseModel_save_1(self):
+        """ Test save """
+        baseModel = BaseModel()
+        baseModel.save()
+        self.assertNotEqual(baseModel.created_at, baseModel.updated_at)
+
+    def test_BaseModel_save_2(self):
+        """ Test save twice """
+        baseModel = BaseModel()
+        baseModel.save()
+        sleep(1)
+        baseModel.save()
+        self.assertLess(baseModel.created_at, baseModel.updated_at)
+
+
+class Test_BaseModel_to_dict(unittest.TestCase):
+    """ Test BaseModel to_dict """
+
+    def test_BaseModel_dict_keys(self):
+        """ Test to_dict correct keys """
+        baseModel = BaseModel()
+        self.assertIn("id", baseModel.to_dict())
+        self.assertIn("created_at", baseModel.to_dict())
+        self.assertIn("updated_at", baseModel.to_dict())
+        self.assertIn("__class__", baseModel.to_dict())
+
+
+class Test_BaseModel_str(unittest.TestCase):
+    """ Test BaseModel str """
+
+    def test_BaseModel_str(self):
+        """ Test str """
+        baseModel = BaseModel()
+        self.assertEqual(type(str(baseModel)), str)
+
+    def test_BaseModel_add_attr(self):
+        """ test to_dict """
+        baseModel = BaseModel()
+        baseModel.name = "Holberton"
+        baseModel.my_number = 92047291
+        self.assertIn("name", baseModel.to_dict())
+        self.assertIn("my_number", baseModel.to_dict())
+
+    def test_BaseModel_format_date(self):
+        """ Test date format """
+        baseModel = BaseModel()
+        self.assertEqual(type(baseModel.to_dict()["created_at"]), str)
+        self.assertEqual(type(baseModel.to_dict()["updated_at"]), str)
+
+    def test_BaseModel_list_type(self):
+        """ Test to_dict """
+        baseModel = BaseModel()
+        self.assertEqual(type(baseModel.to_dict()), dict)
+
+    def test_BaseModel_dict_values(self):
+        """ Test to_dict """
+        baseModel = BaseModel()
+        self.assertEqual(type(baseModel.to_dict()["id"]), str)
+        self.assertEqual(type(baseModel.to_dict()["created_at"]), str)
+        self.assertEqual(type(baseModel.to_dict()["updated_at"]), str)
+        self.assertEqual(type(baseModel.to_dict()["__class__"]), str)
+
+    def test_BaseModel_full_dict(self):
+        """ test to_dict """
+        baseModel = BaseModel()
+        baseModel.name = "Holberton"
+        baseModel.my_number = 92047291
+        self.assertEqual(type(baseModel.to_dict()), dict)
+        self.assertIn("name", baseModel.to_dict())
+        self.assertIn("my_number", baseModel.to_dict())
+        self.assertIn("id", baseModel.to_dict())
+        self.assertIn("created_at", baseModel.to_dict())
+        self.assertIn("updated_at", baseModel.to_dict())
+        self.assertIn("__class__", baseModel.to_dict())
 
 
 if __name__ == '__main__':
     """TEST BaseModel"""
-    unittest.main
+    unittest.main()
