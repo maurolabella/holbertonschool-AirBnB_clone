@@ -129,8 +129,10 @@ the change into the JSON file)."""
             return
         elif len(args) == 2:
             print("** attribute name missing  **")
+            return
         elif len(args) == 3:
             print("** value missing  **")
+            return
         elif args[0] not in systemClasses:
             print("** class doesn't exist **")
             return
@@ -159,6 +161,7 @@ the change into the JSON file)."""
                 if classId[0] == arg:
                     instancesNumber += 1
             print(instancesNumber)
+            return
 
 
 if __name__ == '__main__':
