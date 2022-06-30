@@ -84,6 +84,7 @@ class TestBaseModel_Instantiation(unittest.TestCase):
         test_b = BaseModel()
         self.assertTrue(test_a.id != test_b.id)
 
+
 class Test_BaseModel_init(unittest.TestCase):
     """ Test BaseModel Init """
 
