@@ -7,7 +7,7 @@ from models.base_model import BaseModel
 from models.user import User
 
 
-class testUser(unittest.TestCase):
+class Test_User(unittest.TestCase):
     """ Testing User class """
 
     def test_issubclass(self):
