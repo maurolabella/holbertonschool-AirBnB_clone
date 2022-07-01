@@ -12,12 +12,10 @@ import cmd
 import shlex
 
 
-systemClasses = ['BaseModel', 'User', 'State',
-                 'City', 'Amenity', 'Place', 'Review']
-
-
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
+    systemClasses = ['BaseModel', 'User', 'State',
+                     'City', 'Amenity', 'Place', 'Review']
 
     # ----- basic CLI commands ----- #
     def do_quit(self, arg):
@@ -40,9 +38,12 @@ saves it (to the JSON file) and prints the id."""
         if not args:
             print("** class name missing **")
             return
+        elif len(args) > 1:
+            print("** only classname allowed **")
+            return
         else:
             try:
-                myObject = eval(arg)()
+                myObject = eval(args[0])()
                 myObject.save()
                 print(myObject.id)
                 return
