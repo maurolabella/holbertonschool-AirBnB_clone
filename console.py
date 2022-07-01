@@ -1,16 +1,19 @@
 #!/usr/bin/python3
 import models
+from models import storage
 from models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import cmd
-import sys
-import os
-import json
-import models
 import shlex
 
 
-systemClasses = {"BaseModel": BaseModel}
+systemClasses = ['BaseModel', 'User', 'State',
+                 'City', 'Amenity', 'Place', 'Review']
 
 
 class HBNBCommand(cmd.Cmd):
@@ -37,14 +40,15 @@ saves it (to the JSON file) and prints the id."""
         if not args:
             print("** class name missing **")
             return
-        elif args[0] not in systemClasses:
-            print("** class doesn't exist **")
-            return
         else:
-            myObject = eval(args[0])()
-            myObject.save()
-            print(myObject.id)
-            return
+            try:
+                myObject = eval(arg)()
+                myObject.save()
+                print(myObject.id)
+                return
+            except Exception:
+                print("** class doesn't exist **")
+                return
 
     def do_show(self, arg):
         """Prints the string representation of \
@@ -84,11 +88,11 @@ name and id (save the change into the JSON file)."""
             return
         else:
             key = args[0] + "." + args[1]
-            if key in models.storage.all():
+            try:
                 del models.storage.all()[key]
                 models.storage.save()
                 return
-            else:
+            except Exception:
                 print("** no instance found **")
                 return
 
@@ -100,20 +104,26 @@ instances based or not on the class name."""
         myObjectsList = []
 
         if not args:
-            print("** class name missing **")
-            return
-        elif args[0] not in systemClasses:
-            print("** class doesn't exist **")
-            return
+            for key, value in myObject.items():
+                classIdTokens = key.split(".")
+                classId = "[" + classIdTokens[0] + "]"\
+                          + " (" + classIdTokens[1] + ")"
+                myObjectsList.append(classId + " " + str(value))
+
         else:
             for key, value in myObject.items():
-                if arg in key:
+                if args[0] in key:
                     classIdTokens = key.split(".")
                     classId = "[" + classIdTokens[0] + "]"\
                               + " (" + classIdTokens[1] + ")"
                     myObjectsList.append(classId + " " + str(value))
-                    print(myObjectsList)
-            return
+
+            if len(myObjectsList) == 0:
+                print("** class doesn't exist **")
+                return
+
+        print(myObjectsList)
+        return
 
     def do_update(self, arg):
         """Updates an instance based on the class name \
@@ -140,14 +150,15 @@ the change into the JSON file)."""
             classId = args[0] + "." + args[1]
             myObject = models.storage.all()
 
-            if classId not in myObject:
-                print("** no instance found **")
-                return
-            else:
+            try:
                 setAttr = args[2]
                 setAttrValue = args[3].strip('"')
                 setattr(myObject[classId], setAttr, setAttrValue)
                 models.storage.save()
+                return
+
+            except Exception:
+                print("** no instance found **")
                 return
 
     def do_count(self, arg):
@@ -155,12 +166,40 @@ the change into the JSON file)."""
         instancesNumber = 0
         myObject = models.storage.all()
 
-        if arg in systemClasses:
+        if not arg:
+            for key in myObject.keys():
+                instancesNumber += 1
+
+        else:
+            if arg in systemClasses:
+                for key in myObject.keys():
+                    classId = key.split(".")
+                    if classId[0] == arg:
+                        instancesNumber += 1
+            else:
+                print("** class doesn't exist **")
+                return
+
+        print(instancesNumber)
+        return
+
+    def do_stats(self, arg):
+        """Returns an object with the number of instances for each class."""
+        myObject = models.storage.all()
+        myStats = {}
+
+        if not arg:
             for key in myObject.keys():
                 classId = key.split(".")
-                if classId[0] == arg:
-                    instancesNumber += 1
-            print(instancesNumber)
+                if classId[0] not in myStats:
+                    myStats.update({"{}".format(classId[0]): 1})
+                else:
+                    myStats[classId[0]] += 1
+            print(myStats)
+            return
+
+        else:
+            print("** no args allowed for this method **")
             return
 
 
