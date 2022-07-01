@@ -13,6 +13,21 @@ class Test_State_init(unittest.TestCase):
     def test_init(self):
         self.assertIs(State, type(State()))
 
+    def test_attrs(self):
+        """ checks the attributes """
+        state = State()
+        self.assertTrue(hasattr(state, "name"))
+
+    def test_attrs_types(self):
+        """ checks if it has the correct data types """
+        state = State()
+        self.assertEqual(type(state.name), str)
+
+    def test_values(self):
+        """ checks if it has the correct values """
+        state = State()
+        self.assertEqual(state.name, "")
+
 
 class Test_State_Save(unittest.TestCase):
     """ Unittest for testing save"""
