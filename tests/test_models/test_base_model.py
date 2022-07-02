@@ -17,6 +17,9 @@ class Test_Docs_BaseModel(unittest.TestCase):
 
     all_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
 
+    def test_file_exists(self):
+        os.path.isfile("../../models/base_model.py")
+
     def test_doc_file(self):
         """check for documentation"""
         expected = "\nBaseModel Class (Models' module)\n"
