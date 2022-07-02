@@ -12,7 +12,7 @@ from datetime import datetime
 from time import sleep
 
 
-class TestDocs_BaseModel(unittest.TestCase):
+class Test_Docs_BaseModel(unittest.TestCase):
     """Class for testing docs in BaseModel"""
 
     all_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
@@ -21,7 +21,6 @@ class TestDocs_BaseModel(unittest.TestCase):
         """check for documentation"""
         expected = "\nBaseModel Class (Models' module)\n"
         actual = base_model.__doc__
-        print(actual)
         self.assertEqual(expected, actual)
 
     def test_doc_class(self):
@@ -32,7 +31,7 @@ class TestDocs_BaseModel(unittest.TestCase):
 
     def test_all_function_docs(self):
         """check for documentation in all functions"""
-        all_functions = TestDocs_BaseModel.all_funcs
+        all_functions = Test_Docs_BaseModel.all_funcs
         for function in all_functions:
             self.assertIsNotNone(function[1].__doc__)
 
@@ -50,7 +49,7 @@ class TestDocs_BaseModel(unittest.TestCase):
         self.assertTrue(actual)
 
 
-class TestBaseModel_Instantiation(unittest.TestCase):
+class Test_Init_BaseModel_1(unittest.TestCase):
     """Testing instances and variables thereof"""
 
     def setUp(self):
@@ -85,7 +84,7 @@ class TestBaseModel_Instantiation(unittest.TestCase):
         self.assertTrue(test_a.id != test_b.id)
 
 
-class Test_BaseModel_init(unittest.TestCase):
+class Test_init_BaseModel_2(unittest.TestCase):
     """ Test BaseModel Init """
 
     def test_BaseModel_init(self):
@@ -122,7 +121,7 @@ class Test_BaseModel_init(unittest.TestCase):
         self.assertNotEqual(baseModel1.created_at, baseModel2.created_at)
 
 
-class Test_BaseModel_save(unittest.TestCase):
+class Test_Save_BaseModel(unittest.TestCase):
     """ Test BaseModel Save """
 
     def test_BaseModel_save_1(self):
@@ -140,7 +139,7 @@ class Test_BaseModel_save(unittest.TestCase):
         self.assertLess(baseModel.created_at, baseModel.updated_at)
 
 
-class Test_BaseModel_to_dict(unittest.TestCase):
+class Test_To_Dict_BaseModel(unittest.TestCase):
     """ Test BaseModel to_dict """
 
     def test_BaseModel_dict_keys(self):
@@ -152,7 +151,7 @@ class Test_BaseModel_to_dict(unittest.TestCase):
         self.assertIn("__class__", baseModel.to_dict())
 
 
-class Test_BaseModel_str(unittest.TestCase):
+class Test_Str_BaseModel(unittest.TestCase):
     """ Test BaseModel str """
 
     def test_BaseModel_str(self):
