@@ -3,50 +3,54 @@
 Applying Unit Test for State Class
 """
 import unittest
-import models
+from models.base_model import BaseModel
 from models.state import State
 
 
-class Test_State_init(unittest.TestCase):
-    """ Testing instantiation """
+class Test_State(unittest.TestCase):
+    """ Testing State class """
 
-    def test_init(self):
-        self.assertIs(State, type(State()))
+    def test_issubclass(self):
+        """ BaseModel / subclass """
+        self.assertTrue(issubclass(State, BaseModel))
 
     def test_attrs(self):
-        """ checks the attributes """
-        state = State()
-        self.assertTrue(hasattr(state, "name"))
+        """ attr check """
+        self.assertTrue('name' in State.__dict__)
 
-    def test_attrs_types(self):
-        """ checks if it has the correct data types """
+    def test_data_types(self):
+        """ data types check """
         state = State()
-        self.assertEqual(type(state.name), str)
+        self.assertTrue(type(state.name), str)
 
     def test_values(self):
-        """ checks if it has the correct values """
+        """ values check """
         state = State()
         self.assertEqual(state.name, "")
 
-
-class Test_State_Save(unittest.TestCase):
-    """ Unittest for testing save"""
+    def test_str(self):
+        """ str check """
+        state = State()
+        string = "[{}] ({}) {}"\
+                 .format(State.__name__, state.id, state.__dict__)
+        self.assertEqual(string, str(state))
 
     def test_save(self):
+        """ save check """
         state = State()
         state.save()
         self.assertNotEqual(state.created_at, state.updated_at)
 
-    def test_update(self):
+    def test_to_dict(self):
+        """ to dict check """
         state = State()
-        state.save()
-        state.save()
-        self.assertNotEqual(state.created_at, state.updated_at)
+        new_dict = state.to_dict()
+        self.assertEqual(type(new_dict), dict)
+        self.assertTrue('to_dict' in dir(state))
 
-    def test_json(self):
-        state = State()
-        state.save()
-        self.assertIs(type(state.to_dict()), dict)
+    def test_docstring(self):
+        """ docstring check """
+        self.assertIsNotNone(State.__doc__)
 
 
 if __name__ == "__main__":

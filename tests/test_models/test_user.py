@@ -11,45 +11,56 @@ class Test_User(unittest.TestCase):
     """ Testing User class """
 
     def test_issubclass(self):
-        """ checks if it is subclass of BaseModel """
+        """ BaseModel / subclass """
         self.assertTrue(issubclass(User, BaseModel))
 
+    def test_attrs(self):
+        """ attr check """
+        self.assertTrue('first_name' in User.__dict__)
+        self.assertTrue('last_name' in User.__dict__)
+        self.assertTrue('email' in User.__dict__)
+        self.assertTrue('password' in User.__dict__)
+
+    def test_data_types(self):
+        """ data types check """
+        user = User()
+        self.assertTrue(type(user.first_name), str)
+        self.assertTrue(type(user.last_name), str)
+        self.assertTrue(type(user.email), str)
+        self.assertTrue(type(user.password), str)
+
+    def test_values(self):
+        """ values check """
+        user = User()
+        self.assertEqual(user.first_name, "")
+        self.assertEqual(user.last_name, "")
+        self.assertEqual(user.email, "")
+        self.assertEqual(user.password, "")
+
+    def test_str(self):
+        """ str check """
+        user = User()
+        string = "[{}] ({}) {}"\
+                 .format(User.__name__, user.id, user.__dict__)
+        self.assertEqual(string, str(user))
+
     def test_save(self):
-        """ checks if it saves correctly """
+        """ save check """
         user = User()
         user.save()
         self.assertNotEqual(user.created_at, user.updated_at)
 
-    def test_attrs(self):
-        """ checks the attributes """
+    def test_to_dict(self):
+        """ to dict check """
         user = User()
-        self.assertTrue(hasattr(user, "email"))
-        self.assertTrue(hasattr(user, "password"))
-        self.assertTrue(hasattr(user, "first_name"))
-        self.assertTrue(hasattr(user, "last_name"))
+        new_dict = user.to_dict()
+        self.assertEqual(type(new_dict), dict)
+        self.assertTrue('to_dict' in dir(user))
 
-    def test_attrs_types(self):
-        """ checks if it has the correct data types """
-        user = User()
-        self.assertEqual(type(user.email), str)
-        self.assertEqual(type(user.password), str)
-        self.assertEqual(type(user.first_name), str)
-        self.assertEqual(type(user.last_name), str)
-
-    def test_values(self):
-        """ checks if it has the correct values """
-        user = User()
-        self.assertEqual(user.email, "")
-        self.assertEqual(user.password, "")
-        self.assertEqual(user.first_name, "")
-        self.assertEqual(user.last_name, "")
-
-    def test_str(self):
-        """ checks if it has the correct repr """
-        user = User()
-        string = "[User] ({}) {}".format(user.id, user.__dict__)
-        self.assertEqual(user.__str__(), string)
+    def test_docstring(self):
+        """ docstring check """
+        self.assertIsNotNone(User.__doc__)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
