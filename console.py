@@ -61,7 +61,7 @@ an instance based on the class name and id."""
         elif len(args) == 1:
             print("** instance id missing **")
             return
-        elif args[0] not in systemClasses:
+        elif args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         else:
@@ -84,7 +84,7 @@ name and id (save the change into the JSON file)."""
         elif len(args) == 1:
             print("** instance id missing **")
             return
-        elif args[0] not in systemClasses:
+        elif args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         else:
@@ -144,7 +144,7 @@ the change into the JSON file)."""
         elif len(args) == 3:
             print("** value missing  **")
             return
-        elif args[0] not in systemClasses:
+        elif args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         else:
@@ -172,7 +172,7 @@ the change into the JSON file)."""
                 instancesNumber += 1
 
         else:
-            if arg in systemClasses:
+            if arg in self.systemClasses:
                 for key in myObject.keys():
                     classId = key.split(".")
                     if classId[0] == arg:
