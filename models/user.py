@@ -12,7 +12,3 @@ class User(BaseModel):
     last_name = ""
     email = ""
     password = ""
-
-    def __init__(self, *args, **kwargs):
-        """initialize Super class"""
-        super().__init__(*args, **kwargs)
