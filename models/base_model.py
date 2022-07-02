@@ -2,7 +2,6 @@
 """
 BaseModel Class (Models' module)
 """
-from rich import inspect
 import models
 import json
 from uuid import uuid4
