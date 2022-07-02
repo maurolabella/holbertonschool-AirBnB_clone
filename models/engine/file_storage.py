@@ -17,7 +17,7 @@ import json
 class FileStorage():
     """serializes instances to a JSON file
     and deserializes JSON files to instances"""
-    __file_path = "./models/engine/file.json"
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
