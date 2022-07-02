@@ -4,7 +4,6 @@ BaseModel Class (Models' module)
 """
 from rich import inspect
 import models
-import subprocess
 import json
 from uuid import uuid4
 from datetime import datetime
@@ -56,7 +55,7 @@ class BaseModel:
         """
         updates and save instance
         """
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now()
         """calling save method of storage"""
         models.storage.save()
 
