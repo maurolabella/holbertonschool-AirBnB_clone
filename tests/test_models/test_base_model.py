@@ -203,6 +203,6 @@ class Test_Str_BaseModel(unittest.TestCase):
         self.assertIn("__class__", baseModel.to_dict())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """TEST BaseModel"""
     unittest.main()
