@@ -53,7 +53,7 @@ class Test_Console_help(unittest.TestCase):
     def test_help_create(self):
         """  help test """
         help = ("Creates a new instance of BaseModel, saves it "
-                "(to the JSON file) and prints the id")
+                "(to the JSON file) and prints the id.")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help create"))
             self.assertEqual(help, f.getvalue().strip())
@@ -61,7 +61,7 @@ class Test_Console_help(unittest.TestCase):
     def test_help_all(self):
         """  help test """
         help = ("Prints all string representation of all instances "
-                "based or not on the class name")
+                "based or not on the class name.")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help all"))
             self.assertEqual(help, f.getvalue().strip())
@@ -69,7 +69,7 @@ class Test_Console_help(unittest.TestCase):
     def test_help_show(self):
         """  help test """
         help = ("Prints the string representation of an instance "
-                "based on the class name and id")
+                "based on the class name and id.")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help show"))
             self.assertEqual(help, f.getvalue().strip())
@@ -77,7 +77,7 @@ class Test_Console_help(unittest.TestCase):
     def test_help_destroy(self):
         """  help test """
         help = ("Deletes an instance based on the class name "
-                "and id (save the change into the JSON file)")
+                "and id (save the change into the JSON file).")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help destroy"))
             self.assertEqual(help, f.getvalue().strip())
@@ -92,7 +92,7 @@ class Test_Console_help(unittest.TestCase):
     def test_help_update(self):
         """  help test """
         help = ("Updates an instance based on the class name and id by "
-                "adding or updating attribute (save the change into the JSON file)")
+                "adding or updating attribute (save the change into the JSON file).")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help update"))
             self.assertEqual(help, f.getvalue().strip())
