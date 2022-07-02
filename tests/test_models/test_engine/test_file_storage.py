@@ -60,5 +60,5 @@ class Test_FileStorage(unittest.TestCase):
                              __doc__)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
