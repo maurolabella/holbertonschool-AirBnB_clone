@@ -6,7 +6,7 @@ from rich import inspect
 import models
 import subprocess
 import json
-from uuid import uuid4, UUID
+from uuid import uuid4
 from datetime import datetime
 
 
@@ -29,21 +29,21 @@ class BaseModel:
         """
         private__sets attr
         """
-        if 'created_at' not in attrib_d:
-            attrib_d['created_at'] = datetime.now()
-        elif not isinstance(attrib_d['created_at'], datetime):
-            attrib_d['created_at'] = datetime.strptime(
-                attrib_d['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
-        if 'id' not in attrib_d:
-            attrib_d['id'] = str(uuid4())
-        if 'updated_at' not in attrib_d:
-            attrib_d['updated_at'] = datetime.now()
-        elif not isinstance(attrib_d['updated_at'], datetime):
-            attrib_d['updated_at'] = datetime.strptime(
-                attrib_d['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
-        attrib_d.pop('__class__', None)
-        for attr, val in attrib_d.items():
-            setattr(self, attr, val)
+        for key, value in attrib_d.items():
+            if key == "id":
+                self.id = value
+                continue
+            if key == "created_at":
+                self.__dict__["created_at"] = datetime.strptime(
+                    value, '%Y-%m-%dT%H:%M:%S.%f')
+                continue
+            if key == "updated_at":
+                self.__dict__["updated_at"] = datetime.strptime(
+                    value, '%Y-%m-%dT%H:%M:%S.%f')
+                continue
+            if key == '__class__':
+                continue
+            setattr(self, key, value)
 
     def __str__(self):
         """
@@ -51,10 +51,6 @@ class BaseModel:
         instance
         """
         return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
-        """
-        return '[{}] ({}) {}'.format(type(self).__name__,
-                                     self.id, self.__dict__)
-        """
 
     def save(self):
         """
