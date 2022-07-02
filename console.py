@@ -10,10 +10,14 @@ from models.place import Place
 from models.review import Review
 import cmd
 import shlex
+import sys
 
 
 class HBNBCommand(cmd.Cmd):
-    prompt = '(hbnb) '
+    if sys.stdin and sys.stdin.isatty():
+        prompt = '(hbnb) '
+    else:
+        prompt = '(hbnb)\n'
     systemClasses = ['BaseModel', 'User', 'State',
                      'City', 'Amenity', 'Place', 'Review']
 
