@@ -21,23 +21,23 @@ class BaseModel:
             self.__mount_attrib(kwargs)
         else:
             self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __mount_attrib(self, attrib_d):
         """
         private__sets attr
         """
-        if 'id' not in attrib_d:
-            attrib_d['id'] = str(uuid4())
         if 'created_at' not in attrib_d:
-            attrib_d['created_at'] = datetime.utcnow()
+            attrib_d['created_at'] = datetime.now()
         elif not isinstance(attrib_d['created_at'], datetime):
             attrib_d['created_at'] = datetime.strptime(
                 attrib_d['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+        if 'id' not in attrib_d:
+            attrib_d['id'] = str(uuid4())
         if 'updated_at' not in attrib_d:
-            attrib_d['updated_at'] = datetime.utcnow()
+            attrib_d['updated_at'] = datetime.now()
         elif not isinstance(attrib_d['updated_at'], datetime):
             attrib_d['updated_at'] = datetime.strptime(
                 attrib_d['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
@@ -50,8 +50,11 @@ class BaseModel:
         function defining the string type representation of an
         instance
         """
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
+        """
         return '[{}] ({}) {}'.format(type(self).__name__,
                                      self.id, self.__dict__)
+        """
 
     def save(self):
         """
