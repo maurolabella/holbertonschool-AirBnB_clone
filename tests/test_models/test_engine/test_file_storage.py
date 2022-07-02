@@ -59,6 +59,18 @@ class Test_FileStorage(unittest.TestCase):
         self.assertIsNotNone(models.engine.file_storage.FileStorage.reload.
                              __doc__)
 
+    def test_docmodule(self):
+        """ checking doc module """
+        self.assertGreater(len(file_storage.__doc__), 1)
+
+    def test_docclass(self):
+        """checking doc class"""
+        self.assertGreater(len(file_storage.FileStorage.__doc__), 1)
+
+    def test_attrd(self):
+        """test for presence of attributes"""
+        self.assertEqual(dict, type(self.storage.all()))
+
 
 if __name__ == "__main__":
     unittest.main()
