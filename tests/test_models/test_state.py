@@ -5,10 +5,14 @@ Applying Unit Test for State Class
 import unittest
 from models.base_model import BaseModel
 from models.state import State
+import os
 
 
 class Test_State(unittest.TestCase):
     """ Testing State class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/state.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """

@@ -5,10 +5,14 @@ Applying Unit Test for Review Class
 import unittest
 from models.base_model import BaseModel
 from models.review import Review
+import os
 
 
 class Test_Review(unittest.TestCase):
     """ Testing Review class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/review.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """

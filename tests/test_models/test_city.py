@@ -5,10 +5,14 @@ Applying Unit Test for City Class
 import unittest
 from models.base_model import BaseModel
 from models.city import City
+import os
 
 
 class Test_City(unittest.TestCase):
     """ Testing City class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/city.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """

@@ -5,10 +5,14 @@ Applying Unit Test for User Class
 import unittest
 from models.base_model import BaseModel
 from models.user import User
+import os
 
 
 class Test_User(unittest.TestCase):
     """ Testing User class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/user.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """

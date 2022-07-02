@@ -5,10 +5,14 @@ Applying Unit Test for Place Class
 import unittest
 from models.base_model import BaseModel
 from models.place import Place
+import os
 
 
 class Test_Place(unittest.TestCase):
     """ Testing Place class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/place.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """

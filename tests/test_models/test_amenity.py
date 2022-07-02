@@ -5,10 +5,14 @@ Applying Unit Test for Amenity Class
 import unittest
 from models.base_model import BaseModel
 from models.amenity import Amenity
+import os
 
 
 class Test_State(unittest.TestCase):
     """ Testing Amenity class """
+
+    def test_file_exists(self):
+        os.path.isfile("../../models/amenity.py")
 
     def test_issubclass(self):
         """ BaseModel / subclass """
