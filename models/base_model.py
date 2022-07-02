@@ -80,6 +80,8 @@ class BaseModel:
         tmp['created_at'] = self.created_at.isoformat()
         tmp['updated_at'] = self.updated_at.isoformat()
         tmp['__class__'] = type(self).__name__
+        """
         dict_r = {key: val if self.__check_to_serial(val) else str(val)
                   for key, val in tmp.items()}
-        return(dict_r)
+        """
+        return(tmp)
