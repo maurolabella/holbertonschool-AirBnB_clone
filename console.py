@@ -200,7 +200,7 @@ the change into the JSON file)."""
                 instancesNumber += 1
 
         else:
-            if arg in self.systemClasses:
+            if arg in self.HBNC_systemClasses:
                 for key in myObject.keys():
                     classId = key.split(".")
                     if classId[0] == arg:
