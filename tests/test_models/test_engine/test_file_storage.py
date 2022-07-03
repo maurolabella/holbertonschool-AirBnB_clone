@@ -16,6 +16,42 @@ from models.review import Review
 
 class Test_FileStorage(unittest.TestCase):
     """ Testing FileStorage class """
+    def test_classes(self):
+        """check if classes are created"""
+
+        self.assertIsInstance(models.engine.file_storage.FileStorage(),
+                              models.engine.file_storage.FileStorage)
+
+    def test_all(self):
+        """check if all method is working"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().all)
+
+    def test_new(self):
+        """check if new method is working"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().new)
+
+    def test_save(self):
+        """check if save method is working"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().save)
+
+    def test_reload(self):
+        """check if reload method is working"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().reload)
+
+    def test_all_method(self):
+        """check if all method is working"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().all())
+
+    def test_models_all(self):
+        """check if all method is working"""
+
+        self.assertIsNotNone(models.storage.all())
+
     def setUp(self):
         """ init instance """
         self.my_model = BaseModel()
