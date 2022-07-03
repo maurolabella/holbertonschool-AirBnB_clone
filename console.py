@@ -12,7 +12,6 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 import cmd
-import shlex
 import sys
 
 
@@ -48,7 +47,7 @@ saves it (to the JSON file) and prints the id."""
         if not arg:
             print("** class name missing **")
             return
-        args = shlex.split(arg)
+        args = arg.split()
         if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
             return
@@ -64,7 +63,7 @@ an instance based on the class name and id."""
         if not arg:
             print("** class name missing **")
             return
-        args = shlex.split(arg)
+        args = arg.split()
         if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
             return
@@ -85,7 +84,7 @@ name and id (save the change into the JSON file)."""
         if not arg:
             print("** class name missing **")
             return
-        args = shlex.split(arg)
+        args = arg.split()
         if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
             return
@@ -111,7 +110,7 @@ instances based or not on the class name."""
             if len(res) != 0:
                 print(res)
             return
-        args = shlex.split(arg)
+        args = arg.split()
         if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
             return
@@ -129,7 +128,7 @@ the change into the JSON file)."""
         if not arg:
             print("** class name missing **")
             return
-        args = shlex.split(arg)
+        args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -159,23 +158,34 @@ the change into the JSON file)."""
                 return
 
     def precmd(self, arg):
-        """Parser for inputs of the kind <ClassName>.command"""
-        args = arg.split('.', 1)
-        if len(args) == 2:
-            try:
+        """Parser for inputs of the kind <ClassName>.command\n"""
+        if arg and ('(' and ')' and '.' in arg):
+            args = arg.split('.', 1)
+            if args[1] != '':
                 mod_class = args[0]
                 args = args[1].split('(', 1)
-                cmnd = args[0]
-                id = ''
-                detail = ''
-                if len(args) == 2:
+                if args[1] != '':
+                    cmnd = args[0]
                     args = args[1].split(')', 1)
-                    if len(args) == 2:
-                        id = args[0]
-                        detail = args[1]
-                    line = cmnd + ' ' + mod_class + ' ' + id + ' ' + detail
-                    return line
-            except Exception:
+                    if args[1] == '':
+                        args = args[0].split(',')
+                        id = args[0].strip('"')
+                        attr_name = ''
+                        attr_value = ''
+                        if len(args) == 3:
+                            attr_name = args[1].strip('"')
+                            attr_value = args[2]
+                        line = (cmnd + ' ' + mod_class + ' '
+                                + id + ' ' + attr_name + ' ' + attr_value)
+                        try:
+                            return line
+                        except Exception:
+                            return arg
+                    else:
+                        return arg
+                else:
+                    return arg
+            else:
                 return arg
         else:
             return arg
