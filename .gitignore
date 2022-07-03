@@ -2,3 +2,4 @@ update_repo
 update_local
 run_tests
 check_pycode
+console2.py

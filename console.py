@@ -74,8 +74,7 @@ an instance based on the class name and id."""
                 print("** no instance found **")
                 return
             else:
-                print("[{}] ({}) {}".format(args[0], myObject[1],
-                      models.storage.all()[myObject]))
+                print(models.storage.all()[myObject])
                 return
 
     def do_destroy(self, arg):
