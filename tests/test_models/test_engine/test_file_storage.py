@@ -16,48 +16,40 @@ from models.review import Review
 
 class Test_FileStorage(unittest.TestCase):
     """ Testing FileStorage class """
+    def setUp(self):
+        """ init instance """
+        self.my_model = BaseModel()
+        self.storage = FileStorage()
 
-    def test_classes(self):
-        """ class created check """
-        self.assertIsInstance(models.engine.file_storage.FileStorage(),
-                              models.engine.file_storage.FileStorage)
+    def test_docmodule(self):
+        """ checking doc module """
+        self.assertGreater(len(models.engine.file_storage.__doc__), 1)
 
-    def test_new(self):
-        """ method new check """
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().new)
-
-    def test_all(self):
-        """ method all check """
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().all)
-
-    def test_save(self):
-        """ method save check """
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().save)
+    def test_docclass(self):
+        """checking doc class"""
+        self.assertGreater(len(models.engine.file_storage.FileStorage.__doc__),
+                           1)
 
     def test_reload(self):
-        """ method reload check """
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().reload)
+        """ test reload from json """
+        self.my_model.name = "My_first_model"
+        self.my_model.my_number = 89
+        name = str(self.my_model.__class__.__name__)
+        key = name + "." + str(self.my_model.id)
+        self.my_model.save()
+        self.storage.reload()
+        objs = self.storage.all()
+        self.obj_reload = objs[key]
+        self.assertTrue(self.my_model.__dict__ == self.obj_reload.__dict__)
+        self.assertTrue(self.my_model is not self.obj_reload)
+        self.assertIsInstance(self.obj_reload, BaseModel)
+        self.assertTrue(self.storage.all(), "My_first_model")
+        self.assertNotEqual(self.obj_reload.created_at,
+                            self.obj_reload.updated_at)
 
-    def test_models_all(self):
-        """ models storage all check """
-        self.assertIsNotNone(models.storage.all())
-
-    def test_docstring(self):
-        """ docstrings check """
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.all.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.__init__.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.new.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.save.
-                             __doc__)
-        self.assertIsNotNone(models.engine.file_storage.FileStorage.reload.
-                             __doc__)
+    def test_attrd(self):
+        """test for presence of attributes"""
+        self.assertEqual(dict, type(self.storage.all()))
 
 
 if __name__ == "__main__":
