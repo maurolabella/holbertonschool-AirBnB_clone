@@ -42,6 +42,18 @@ class Test_FileStorage(unittest.TestCase):
         """ models storage all check """
         self.assertIsNotNone(models.storage.all())
 
+    def test_models_new(self):
+        """ models storage new check """
+        self.assertIsInstance(models.storage.new(BaseModel()), type(None))
+
+    def test_models_save(self):
+        """ models storage save check """
+        self.assertIsInstance(models.storage.save(), type(None))
+
+    def test_models_reload(self):
+        """ models storage all check """
+        self.assertIsInstance(models.storage.reload(), type(None))
+
     def test_docstring(self):
         """ docstrings check """
         self.assertIsNotNone(models.engine.file_storage.FileStorage.
@@ -61,25 +73,28 @@ class Test_FileStorage(unittest.TestCase):
 
     def test_docmodule(self):
         """ checking doc module """
-        pass
-        """
         self.assertGreater(len(models.engine.file_storage.__doc__), 1)
-        """
 
     def test_docclass(self):
         """checking doc class"""
-        """
         self.assertGreater(len(models.engine.file_storage.
                            FileStorage.__doc__), 1)
-        """
-        pass
 
-    def test_attrd(self):
+    def test_attrd_all(self):
         """test for presence of attributes"""
-        """
         self.assertEqual(dict, type(models.storage.all()))
-        """
-        pass
+
+    def test_attrd_new(self):
+        """test for presence of attributes"""
+        self.assertEqual(type(None), type(models.storage.new(BaseModel())))
+
+    def test_attrd_save(self):
+        """test for presence of attributes"""
+        self.assertEqual(type(None), type(models.storage.save()))
+
+    def test_attrd_reload(self):
+        """test for presence of attributes"""
+        self.assertEqual(type(None), type(models.storage.reload()))
 
 
 if __name__ == "__main__":
