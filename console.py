@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Console Module
+"""
 import models
 from models import storage
 from models.base_model import BaseModel
@@ -14,14 +17,18 @@ import sys
 
 
 class HBNBCommand(cmd.Cmd):
+    """
+    Class Console
+    """
+
+    HBNC_systemClasses = ['BaseModel', 'User', 'State',
+                          'City', 'Amenity', 'Place', 'Review']
+
     if sys.stdin and sys.stdin.isatty():
         prompt = '(hbnb) '
     else:
         prompt = '(hbnb)\n'
-    systemClasses = ['BaseModel', 'User', 'State',
-                     'City', 'Amenity', 'Place', 'Review']
 
-    # ----- basic CLI commands ----- #
     def do_quit(self, arg):
         """Quit command to exit the program"""
         quit()
@@ -38,132 +45,140 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         """Creates a new instance of BaseModel, \
 saves it (to the JSON file) and prints the id."""
-        args = shlex.split(arg)
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif len(args) > 1:
-            print("** only classname allowed **")
+        args = shlex.split(arg)
+        if args[0] not in self.HBNC_systemClasses:
+            print("** class doesn't exist **")
             return
         else:
-            try:
-                myObject = eval(args[0])()
-                myObject.save()
-                print(myObject.id)
-                return
-            except Exception:
-                print("** class doesn't exist **")
-                return
+            myObject = eval(args[0] + '()')
+            myObject.save()
+            print(myObject.id)
+            return
 
     def do_show(self, arg):
         """Prints the string representation of \
 an instance based on the class name and id."""
-        args = shlex.split(arg)
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif len(args) == 1:
-            print("** instance id missing **")
-            return
-        elif args[0] not in self.systemClasses:
+        args = shlex.split(arg)
+        if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
+            return
+        if len(args) == 1:
+            print("** instance id missing **")
             return
         else:
             myObject = "{}.{}".format(args[0], args[1])
-            if myObject not in models.storage.all().keys():
+            try:
+                print("[{}] ({}) {}".format(args[0], myObject[1],
+                                            storage.all()[myObject]))
+            except Exception:
                 print("** no instance found **")
-                return
-            else:
-                print(models.storage.all()[myObject])
-                return
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class \
 name and id (save the change into the JSON file)."""
-        args = shlex.split(arg)
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif len(args) == 1:
-            print("** instance id missing **")
-            return
-        elif args[0] not in self.systemClasses:
+        args = shlex.split(arg)
+        if args[0] not in self.HBNC_systemClasses:
             print("** class doesn't exist **")
+            return
+        if len(args) == 1:
+            print("** instance id missing **")
             return
         else:
             key = args[0] + "." + args[1]
             try:
-                del models.storage.all()[key]
-                models.storage.save()
-                return
+                del storage.all()[key]
+                storage.save()
             except Exception:
                 print("** no instance found **")
-                return
 
     def do_all(self, arg):
         """Prints all string representation of all \
 instances based or not on the class name."""
+        myObject = storage.all()
+        res = []
+        if not arg:
+            for key, value in myObject.items():
+                res.append(str(value))
+            if len(res) != 0:
+                print(res)
+            return
         args = shlex.split(arg)
-        myObject = models.storage.all()
-        myObjectsList = []
-
-        if not args:
-            for key, value in myObject.items():
-                classIdTokens = key.split(".")
-                classId = "[" + classIdTokens[0] + "]"\
-                          + " (" + classIdTokens[1] + ")"
-                myObjectsList.append(classId + " " + str(value))
-
-        else:
-            for key, value in myObject.items():
-                if args[0] in key:
-                    classIdTokens = key.split(".")
-                    classId = "[" + classIdTokens[0] + "]"\
-                              + " (" + classIdTokens[1] + ")"
-                    myObjectsList.append(classId + " " + str(value))
-
-            if len(myObjectsList) == 0:
-                print("** class doesn't exist **")
-                return
-
-        print(myObjectsList)
+        if args[0] not in self.HBNC_systemClasses:
+            print("** class doesn't exist **")
+            return
+        for key, value in myObject.items():
+            if args[0] == str(key.split('.')[0]):
+                res.append(str(value))
+        if len(res) != 0:
+            print(res)
         return
 
     def do_update(self, arg):
         """Updates an instance based on the class name \
 and id by adding or updating attribute (save \
 the change into the JSON file)."""
-        args = shlex.split(arg)
-
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        elif len(args) == 1:
-            print("** instance id missing  **")
+        args = shlex.split(arg)
+        if len(args) == 0:
+            print("** class name missing **")
             return
-        elif len(args) == 2:
-            print("** attribute name missing  **")
-            return
-        elif len(args) == 3:
-            print("** value missing  **")
-            return
-        elif args[0] not in self.systemClasses:
+        if args[0] not in self.HBNC_systemClasses and len(args) >= 1:
             print("** class doesn't exist **")
             return
-        else:
+        if len(args) == 1:
+            print("** instance id missing  **")
+            return
+        if len(args) == 2:
+            print("** attribute name missing  **")
+            return
+        if len(args) == 3:
+            print("** value missing  **")
+            return
+        if len(args) == 4:
             classId = args[0] + "." + args[1]
-            myObject = models.storage.all()
-
-            try:
+            myObject = storage.all()
+            if classId not in myObject:
+                print("** no instance found **")
+                return
+            else:
                 setAttr = args[2]
                 setAttrValue = args[3].strip('"')
                 setattr(myObject[classId], setAttr, setAttrValue)
-                models.storage.save()
+                storage.save()
                 return
 
+    def precmd(self, arg):
+        """Parser for inputs of the kind <ClassName>.command"""
+        args = arg.split('.', 1)
+        if len(args) == 2:
+            try:
+                mod_class = args[0]
+                args = args[1].split('(', 1)
+                cmnd = args[0]
+                id = ''
+                detail = ''
+                if len(args) == 2:
+                    args = args[1].split(')', 1)
+                    if len(args) == 2:
+                        id = args[0]
+                        detail = args[1]
+                    line = cmnd + ' ' + mod_class + ' ' + id + ' ' + detail
+                    return line
             except Exception:
-                print("** no instance found **")
-                return
+                return arg
+        else:
+            return arg
 
     def do_count(self, arg):
         """Retrieves the number of instances of a class"""
@@ -191,7 +206,6 @@ the change into the JSON file)."""
         """Returns an object with the number of instances for each class"""
         myObject = models.storage.all()
         myStats = {}
-
         if not arg:
             for key in myObject.keys():
                 classId = key.split(".")
@@ -201,7 +215,6 @@ the change into the JSON file)."""
                     myStats[classId[0]] += 1
             print(myStats)
             return
-
         else:
             print("** no args allowed for this method **")
             return
