@@ -17,6 +17,31 @@ from models.review import Review
 class Test_FileStorage(unittest.TestCase):
     """ Testing FileStorage class """
 
+    def test_classes(self):
+        """ class created check """
+        self.assertIsInstance(models.engine.file_storage.FileStorage(),
+                              models.engine.file_storage.FileStorage)
+
+    def test_new(self):
+        """ method new check """
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().new)
+
+    def test_all(self):
+        """ method all check """
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().all)
+
+    def test_save(self):
+        """ method save check """
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().save)
+
+    def test_reload(self):
+        """ method reload check """
+        self.assertIsNotNone(models.engine.file_storage.FileStorage().reload)
+
+    def test_models_all(self):
+        """ models storage all check """
+        self.assertIsNotNone(models.storage.all())
+
     def test_docstring(self):
         """ docstrings check """
         self.assertIsNotNone(models.engine.file_storage.FileStorage.
@@ -33,27 +58,6 @@ class Test_FileStorage(unittest.TestCase):
                              __doc__)
         self.assertIsNotNone(models.engine.file_storage.FileStorage.reload.
                              __doc__)
-
-    def test_classes(self):
-        """classes are created"""
-        self.assertIsInstance(models.engine.file_storage.FileStorage(),
-                              models.engine.file_storage.FileStorage)
-
-    def test_new(self):
-        """new method"""
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().new)
-
-    def test_save(self):
-        """save method"""
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().save)
-
-    def test_reload(self):
-        """reload method"""
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().reload)
-
-    def test_all_method(self):
-        """all method"""
-        self.assertIsNotNone(models.engine.file_storage.FileStorage().all())
 
 
 if __name__ == "__main__":
