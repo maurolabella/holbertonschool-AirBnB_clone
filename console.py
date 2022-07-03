@@ -13,6 +13,7 @@ from models.place import Place
 from models.review import Review
 import cmd
 import sys
+from os import system
 
 
 class HBNBCommand(cmd.Cmd):
@@ -39,6 +40,10 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Pass on empty line"""
         return
+
+    def do_clear(self, arg):
+        """Clean Screen"""
+        system('clear')
 
     # ----- extended CLI commands ----- #
     def do_create(self, arg):
@@ -157,6 +162,51 @@ the change into the JSON file)."""
                 storage.save()
                 return
 
+    def __update_from_dict(self, mod_class, id, arg):
+        """update an instance based on his ID with a dictionary"""
+        classId = mod_class + "." + id
+        myObject = models.storage.all()
+        try:
+            for key, value in arg.items():
+                if key == "id":
+                    continue
+                if key == "created_at":
+                    myObject[classId]["created_at"] = datetime.strptime(
+                        value, '%Y-%m-%dT%H:%M:%S.%f')
+                    continue
+                if key == "updated_at":
+                    myObject[classId]["updated_at"] = datetime.strptime(
+                        value, '%Y-%m-%dT%H:%M:%S.%f')
+                    continue
+                if key == '__class__':
+                    continue
+                setattr(myObject[classId], key, value)
+        except Exception:
+            print("** no instance found **")
+            return
+
+    def __dict_builder(self, arg):
+        """
+        private: builds dictionary from string if it is
+        allowed by string's proper articulation
+        """
+        if '{' and '}' in arg:
+            tmp = arg.split('}', 1)
+            if tmp[1] == '':
+                tmp = tmp[0].split('{', 1)[1]
+                tmp = tmp.split(', ')
+                tmp = list(couple.split(':') for couple in tmp)
+                d = {}
+                for sub_list in tmp:
+                    k = sub_list[0].strip('"\' {}')
+                    v = sub_list[1].strip('"\' {}')
+                    d[k] = v
+                return d
+            else:
+                return None
+        else:
+            return None
+
     def precmd(self, arg):
         """Parser for inputs of the kind <ClassName>.command\n"""
         if arg and ('(' and ')' and '.' in arg):
@@ -167,21 +217,27 @@ the change into the JSON file)."""
                 if args[1] != '':
                     cmnd = args[0]
                     args = args[1].split(')', 1)
-                    if args[1] == '':
+                    id = ''
+                    attr_name = ''
+                    attr_value = ''
+                    if args[0] != '' and args[1] == '':
                         args = args[0].split(',')
                         id = args[0].strip('"')
-                        attr_name = ''
-                        attr_value = ''
+                        if len(args) == 2:
+                            d = self.__dict_builder(args[1])
+                            if d is not None:
+                                self.__update_from_dict(mod_class, id, d)
+                                return
+                            else:
+                                return arg
                         if len(args) == 3:
                             attr_name = args[1].strip('"')
                             attr_value = args[2]
-                        line = (cmnd + ' ' + mod_class + ' '
-                                + id + ' ' + attr_name + ' ' + attr_value)
-                        try:
-                            return line
-                        except Exception:
-                            return arg
-                    else:
+                    line = cmnd + ' ' + mod_class + ' ' \
+                        + id + ' ' + attr_name + ' ' + attr_value
+                    try:
+                        return line
+                    except Exception:
                         return arg
                 else:
                     return arg
