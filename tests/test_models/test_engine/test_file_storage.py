@@ -51,6 +51,22 @@ class Test_FileStorage(unittest.TestCase):
         """test for presence of attributes"""
         self.assertEqual(dict, type(self.storage.all()))
 
+    def test_doc(self):
+        """claass ann method docstrings"""
+
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.
+                             all.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.
+                             __init__.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.
+                             new.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.
+                             save.__doc__)
+        self.assertIsNotNone(models.engine.file_storage.FileStorage.
+                             reload.__doc__)
+
 
 if __name__ == "__main__":
     unittest.main()
