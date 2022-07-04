@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-"""
-Console Module
-"""
 import models
 from models import storage
 from models.base_model import BaseModel
@@ -11,24 +8,22 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from datetime import datetime
+from os import system
 import cmd
 import sys
-from os import system
 
 
 class HBNBCommand(cmd.Cmd):
-    """
-    Class Console
-    """
-
-    HBNC_systemClasses = ['BaseModel', 'User', 'State',
-                          'City', 'Amenity', 'Place', 'Review']
-
     if sys.stdin and sys.stdin.isatty():
         prompt = '(hbnb) '
     else:
         prompt = '(hbnb)\n'
 
+    systemClasses = ['BaseModel', 'User', 'State',
+                     'City', 'Amenity', 'Place', 'Review']
+
+    # ----- basic CLI commands ----- #
     def do_quit(self, arg):
         """Quit command to exit the program"""
         quit()
@@ -37,13 +32,13 @@ class HBNBCommand(cmd.Cmd):
         """EOF command to exit the program"""
         quit()
 
-    def emptyline(self):
-        """Pass on empty line"""
-        return
-
     def do_clear(self, arg):
         """Clean Screen"""
         system('clear')
+
+    def emptyline(self):
+        """Pass on empty line"""
+        return
 
     # ----- extended CLI commands ----- #
     def do_create(self, arg):
@@ -53,7 +48,7 @@ saves it (to the JSON file) and prints the id."""
             print("** class name missing **")
             return
         args = arg.split()
-        if args[0] not in self.HBNC_systemClasses:
+        if args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         else:
@@ -69,17 +64,15 @@ an instance based on the class name and id."""
             print("** class name missing **")
             return
         args = arg.split()
-        if args[0] not in self.HBNC_systemClasses:
+        if args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         if len(args) == 1:
             print("** instance id missing **")
             return
         else:
-            myObject = "{}.{}".format(args[0], args[1])
             try:
-                print("[{}] ({}) {}".format(args[0], myObject[1],
-                                            storage.all()[myObject]))
+                print(storage.all()[args[0] + '.' + args[1]])
             except Exception:
                 print("** no instance found **")
 
@@ -90,14 +83,14 @@ name and id (save the change into the JSON file)."""
             print("** class name missing **")
             return
         args = arg.split()
-        if args[0] not in self.HBNC_systemClasses:
+        if args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         if len(args) == 1:
             print("** instance id missing **")
             return
         else:
-            key = args[0] + "." + args[1]
+            key = args[0] + "." + args[1].strip('"')
             try:
                 del storage.all()[key]
                 storage.save()
@@ -113,53 +106,55 @@ instances based or not on the class name."""
             for key, value in myObject.items():
                 res.append(str(value))
             if len(res) != 0:
-                print(res)
+                print("[{0}]".format(
+                    ', '.join(map(str, res))))
             return
         args = arg.split()
-        if args[0] not in self.HBNC_systemClasses:
+        if args[0] not in self.systemClasses:
             print("** class doesn't exist **")
             return
         for key, value in myObject.items():
             if args[0] == str(key.split('.')[0]):
                 res.append(str(value))
         if len(res) != 0:
-            print(res)
+            print("[{0}]".format(
+                ', '.join(map(str, res))))
         return
 
     def do_update(self, arg):
         """Updates an instance based on the class name \
 and id by adding or updating attribute (save \
 the change into the JSON file)."""
-        if not arg:
-            print("** class name missing **")
-            return
         args = arg.split()
-        if len(args) == 0:
+
+        if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.HBNC_systemClasses and len(args) >= 1:
-            print("** class doesn't exist **")
-            return
-        if len(args) == 1:
+        elif len(args) == 1:
             print("** instance id missing  **")
             return
-        if len(args) == 2:
+        elif len(args) == 2:
             print("** attribute name missing  **")
             return
-        if len(args) == 3:
+        elif len(args) == 3:
             print("** value missing  **")
             return
-        if len(args) == 4:
-            classId = args[0] + "." + args[1]
-            myObject = storage.all()
-            if classId not in myObject:
-                print("** no instance found **")
-                return
-            else:
-                setAttr = args[2]
+        elif args[0] not in self.systemClasses:
+            print("** class doesn't exist **")
+            return
+        else:
+            classId = args[0] + "." + args[1].strip('"')
+            myObject = models.storage.all()
+
+            try:
+                setAttr = args[2].strip('"')
                 setAttrValue = args[3].strip('"')
                 setattr(myObject[classId], setAttr, setAttrValue)
-                storage.save()
+                models.storage.save()
+                return
+
+            except Exception:
+                print("** no instance found **")
                 return
 
     def __update_from_dict(self, mod_class, id, arg):
@@ -180,10 +175,13 @@ the change into the JSON file)."""
                     continue
                 if key == '__class__':
                     continue
-                setattr(myObject[classId], key, value)
+                setAttr = key
+                setAttrValue = value
+                setattr(myObject[classId], setAttr, setAttrValue)
+            models.storage.save()
         except Exception:
-            print("** no instance found **")
-            return
+            pass
+        return
 
     def __dict_builder(self, arg):
         """
@@ -211,33 +209,41 @@ the change into the JSON file)."""
         """Parser for inputs of the kind <ClassName>.command\n"""
         if arg and ('(' and ')' and '.' in arg):
             args = arg.split('.', 1)
-            if args[1] != '':
-                mod_class = args[0]
+            if args[0] != '' and args[1] != '':
+                mod_class = args[0].strip('"')
                 args = args[1].split('(', 1)
-                if args[1] != '':
+                if args[0] != '' and args[1] != '':
                     cmnd = args[0]
                     args = args[1].split(')', 1)
-                    id = ''
-                    attr_name = ''
-                    attr_value = ''
-                    if args[0] != '' and args[1] == '':
-                        args = args[0].split(',')
-                        id = args[0].strip('"')
-                        if len(args) == 2:
-                            d = self.__dict_builder(args[1])
-                            if d is not None:
-                                self.__update_from_dict(mod_class, id, d)
-                                return
-                            else:
-                                return arg
-                        if len(args) == 3:
-                            attr_name = args[1].strip('"')
-                            attr_value = args[2]
-                    line = cmnd + ' ' + mod_class + ' ' \
-                        + id + ' ' + attr_name + ' ' + attr_value
-                    try:
-                        return line
-                    except Exception:
+                    if args[1] == '':
+                        attr_name = ''
+                        attr_value = ''
+                        if ',' in args[0]:
+                            args = args[0].split(',', 1)
+                            id = args[0].strip('"')
+                            if args[1] != '':
+                                d = self.__dict_builder(args[1])
+                                if d is not None:
+                                    self.__update_from_dict(mod_class, id, d)
+                                    line = 'show'+' ' + mod_class+' ' + id
+                                    return line
+                                else:
+                                    if ',' in args[1]:
+                                        args = args[1].split(',')
+                                    else:
+                                        return arg
+                            if len(args) == 2:
+                                attr_name = args[0].strip('"')
+                                attr_value = args[1].strip('"')
+                        else:
+                            id = args[0].strip('"')
+                        line = cmnd + ' ' + mod_class + ' ' \
+                            + id + ' ' + attr_name + ' ' + attr_value
+                        try:
+                            return line
+                        except Exception:
+                            return arg
+                    else:
                         return arg
                 else:
                     return arg
@@ -256,7 +262,7 @@ the change into the JSON file)."""
                 instancesNumber += 1
 
         else:
-            if arg in self.HBNC_systemClasses:
+            if arg in self.systemClasses:
                 for key in myObject.keys():
                     classId = key.split(".")
                     if classId[0] == arg:
@@ -272,6 +278,7 @@ the change into the JSON file)."""
         """Returns an object with the number of instances for each class"""
         myObject = models.storage.all()
         myStats = {}
+
         if not arg:
             for key in myObject.keys():
                 classId = key.split(".")
@@ -281,6 +288,7 @@ the change into the JSON file)."""
                     myStats[classId[0]] += 1
             print(myStats)
             return
+
         else:
             print("** no args allowed for this method **")
             return
