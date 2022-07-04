@@ -92,7 +92,8 @@ class Test_Console_help(unittest.TestCase):
     def test_help_update(self):
         """  help test """
         help = ("Updates an instance based on the class name and id by "
-                "adding or updating attribute (save the change into the JSON file).")
+                "adding or updating attribute (save the"
+                "change into the JSON file).")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help update"))
             self.assertEqual(help, f.getvalue().strip())
@@ -101,7 +102,8 @@ class Test_Console_help(unittest.TestCase):
         """  help test """
         help = ("Documented commands (type help <topic>):\n"
                 "========================================\n"
-                "EOF  all  clear  count  create  destroy  help  quit  show  stats  update")
+                "EOF  all  clear  count  create  destroy  help  quit"
+                "show  stats  update")
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("help"))
             self.assertEqual(help, f.getvalue().strip())
