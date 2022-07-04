@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Doc Console Module
+"""
 import models
 from models import storage
 from models.base_model import BaseModel
@@ -15,6 +18,9 @@ import sys
 
 
 class HBNBCommand(cmd.Cmd):
+    """
+    Class Doc
+    """
     if sys.stdin and sys.stdin.isatty():
         prompt = '(hbnb) '
     else:
