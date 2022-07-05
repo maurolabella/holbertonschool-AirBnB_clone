@@ -32,11 +32,11 @@ class HBNBCommand(cmd.Cmd):
     # ----- basic CLI commands ----- #
     def do_quit(self, arg):
         """Quit command to exit the program"""
-        quit()
+        return True
 
     def do_EOF(self, arg):
         """EOF command to exit the program"""
-        quit()
+        return True
 
     def do_clear(self, arg):
         """Clean Screen"""
@@ -44,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """Pass on empty line"""
-        return
+        pass
 
     # ----- extended CLI commands ----- #
     def do_create(self, arg):
@@ -54,14 +54,12 @@ saves it (to the JSON file) and prints the id."""
             print("** class name missing **")
             return
         args = arg.split()
-        if args[0] not in self.systemClasses:
-            print("** class doesn't exist **")
-            return
-        else:
+        try:
             myObject = eval(args[0] + '()')
             myObject.save()
             print(myObject.id)
-            return
+        except Exception:
+            print("** class doesn't exist **")
 
     def do_show(self, arg):
         """Prints the string representation of \
